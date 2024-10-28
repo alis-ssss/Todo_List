@@ -1,59 +1,71 @@
 import TasksListComponent from "../view/task-list-component.js";
 import TaskComponent from "../view/task-component.js";
 import TaskBoardComponent from "../view/taskboard-component.js";
+import EmptyTasksComponent from "../view/empty-tasks-component.js";
+import ResetButtonComponent from '../view/reset-button-component.js';
 import { render } from "../framework/render.js";
 import { StatusLabel } from "../const.js";
-import EmptyTasksComponent from "../view/empty-tasks-component.js";
 
 export default class TasksBoardPresenter {
-  #boardContainer = null;
-  #tasksModel = null;
-  #tasksBoardComponent = new TaskBoardComponent();
-  #boardTasks = [];
+    #boardContainer = null;
+    #tasksModel = null;
+    #tasksBoardComponent = new TaskBoardComponent();
 
-  constructor({ boardContainer, tasksModel }) {
-    this.#boardContainer = boardContainer;
-    this.#tasksModel = tasksModel;
-  }
-
-  init() {
-    // Копируем задачи из модели
-    this.#boardTasks = [...this.#tasksModel];
-    this.#renderBoard();
-  }
-
-  #renderTask(task, container) {
-    const taskComponent = new TaskComponent(task);
-    render(taskComponent, container);
-  }
-
-  #renderBoard() {
-    render(this.#tasksBoardComponent, this.#boardContainer);
-
-    // Группируем задачи по статусу
-    const groupedTasks = this.#boardTasks.reduce((acc, task) => {
-      acc[task.status] = acc[task.status] || [];
-      acc[task.status].push(task);
-      return acc;
-    }, {});
-
-    // Проходим по всем статусам из StatusLabel
-    for (const status in StatusLabel) {
-      const tasksListComponent = new TasksListComponent({
-        status: status,
-        label: StatusLabel[status], // Убедитесь, что StatusLabel определен
-      });
-      render(tasksListComponent, this.#tasksBoardComponent.getElement());
-
-      // Проверяем, есть ли задачи для данного статуса
-      if (!groupedTasks[status] || groupedTasks[status].length === 0) {
-        const emptyTasksComponent = new EmptyTasksComponent();
-        render(emptyTasksComponent, tasksListComponent.getTaskListElement());
-      } else {
-        groupedTasks[status].forEach((taskData) => {
-          this.#renderTask(taskData, tasksListComponent.getTaskListElement());
-        });
-      }
+    constructor({ boardContainer, tasksModel }) {
+        this.#boardContainer = boardContainer;
+        this.#tasksModel = tasksModel;
+        this.#tasksModel.addObserver(this.#handleModelChange.bind(this)); // Подписка на изменения модели
     }
-  }
+
+    init() {
+        this.#renderBoard();
+    }
+
+    #handleModelChange() {
+        this.#clearBoard();
+        this.#renderBoard();
+    }
+
+    #clearBoard() {
+        this.#tasksBoardComponent.element.innerHTML = '';
+    }
+
+    #renderTask(task, container) {
+        const taskComponent = new TaskComponent(task);
+        render(taskComponent, container);
+    }
+
+    #renderBoard() {
+        render(this.#tasksBoardComponent, this.#boardContainer);
+
+        const tasks = this.#tasksModel.tasks;
+        const tasksByStatus = tasks.reduce((map, task) => {
+            if (!map[task.status]) {
+                map[task.status] = [];
+            }
+            map[task.status].push(task);
+            return map;
+        }, {});
+
+        for (const status in StatusLabel) {
+            const listComponent = new TasksListComponent({
+                status,
+                label: StatusLabel[status],
+            });
+            render(listComponent, this.#tasksBoardComponent.getElement());
+            const tasksForStatus = tasksByStatus[status] || [];
+            if (tasksForStatus.length === 0) {
+                render(new EmptyTasksComponent(), listComponent.getTaskListElement());
+            } else {
+                tasksForStatus.forEach(task => this.#renderTask(task, listComponent.getTaskListElement()));
+            }
+        }
+
+        // Кнопка очистки корзины
+        const resetButtonComponent = new ResetButtonComponent();
+        render(resetButtonComponent, this.#tasksBoardComponent.getElement().querySelector('.basket'));
+        resetButtonComponent.element.addEventListener('click', () => {
+            this.#tasksModel.clearBasket();
+        });
+    }
 }
