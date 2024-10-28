@@ -2,34 +2,58 @@ import TasksListComponent from "../view/task-list-component.js";
 import TaskComponent from "../view/task-component.js";
 import TaskBoardComponent from "../view/taskboard-component.js";
 import { render } from "../framework/render.js";
+import { StatusLabel } from "../const.js";
+import EmptyTasksComponent from "../view/empty-tasks-component.js";
 
 export default class TasksBoardPresenter {
-  tasksBoardComponent = new TaskBoardComponent();
+  #boardContainer = null;
+  #tasksModel = null;
+  #tasksBoardComponent = new TaskBoardComponent();
+  #boardTasks = [];
 
   constructor({ boardContainer, tasksModel }) {
-    this.boardContainer = boardContainer;
-    this.tasksModel = tasksModel;
+    this.#boardContainer = boardContainer;
+    this.#tasksModel = tasksModel;
   }
 
   init() {
-        render(this.tasksBoardComponent, this.boardContainer);
-        
-        const tasks = this.tasksModel.getTasks();
-        // Группируем задачи по статусу
-        const groupedTasks = tasks.reduce((acc, task) => {
-            acc[task.status] = acc[task.status] || [];
-            acc[task.status].push(task);
-            return acc;
-        }, {});
+    // Копируем задачи из модели
+    this.#boardTasks = [...this.#tasksModel];
+    this.#renderBoard();
+  }
 
-        for (const status in groupedTasks) {
-            const tasksListComponent = new TasksListComponent(status); // Передае�� статус в компонент
-            render(tasksListComponent, this.tasksBoardComponent.getElement());
-            
-            groupedTasks[status].forEach(taskData => {
-                const taskComponent = new TaskComponent(taskData); // Передаем данные задачи в компонент
-                render(taskComponent, tasksListComponent.getElement());
-            });
-        }
+  #renderTask(task, container) {
+    const taskComponent = new TaskComponent(task);
+    render(taskComponent, container);
+  }
+
+  #renderBoard() {
+    render(this.#tasksBoardComponent, this.#boardContainer);
+
+    // Группируем задачи по статусу
+    const groupedTasks = this.#boardTasks.reduce((acc, task) => {
+      acc[task.status] = acc[task.status] || [];
+      acc[task.status].push(task);
+      return acc;
+    }, {});
+
+    // Проходим по всем статусам из StatusLabel
+    for (const status in StatusLabel) {
+      const tasksListComponent = new TasksListComponent({
+        status: status,
+        label: StatusLabel[status], // Убедитесь, что StatusLabel определен
+      });
+      render(tasksListComponent, this.#tasksBoardComponent.getElement());
+
+      // Проверяем, есть ли задачи для данного статуса
+      if (!groupedTasks[status] || groupedTasks[status].length === 0) {
+        const emptyTasksComponent = new EmptyTasksComponent();
+        render(emptyTasksComponent, tasksListComponent.getTaskListElement());
+      } else {
+        groupedTasks[status].forEach((taskData) => {
+          this.#renderTask(taskData, tasksListComponent.getTaskListElement());
+        });
+      }
     }
+  }
 }

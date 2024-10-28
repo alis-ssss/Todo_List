@@ -193,3 +193,11 @@ html {
 .clear_btn:hover {
   background-color: #990000;
 }
+
+.empty{
+  width: 100%;
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: 1px solid #b6b6b6;
+  color: #b6b6b6;
+}

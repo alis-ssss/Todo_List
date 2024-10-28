@@ -9,9 +9,10 @@ const formContainer = document.querySelector('.add-task');
 const tasksBoardContainer = document.querySelector('.taskboard');
 
 const tasksModel = new TasksModel(); // Создаем экземпляр модели
+
 const tasksBoardPresenter = new TasksBoardPresenter({
     boardContainer: tasksBoardContainer,
-    tasksModel,
+    tasksModel: tasksModel.getTasks()
 });
 
 render(new HeaderComponent(), bodyContainer, RenderPosition.BEFOREBEGIN);

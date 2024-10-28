@@ -1,18 +1,31 @@
-const RenderPosition = {
-    BEFOREBEGIN: 'beforebegin',
-    AFTERBEGIN: 'afterbegin',
-    BEFOREEND: 'beforeend',
-    AFTEREND: 'afterend',
+import { AbstractComponent } from "./view/abstract-component.js";
+
+export const RenderPosition = {
+  AFTERBEGIN: 'afterbegin',
+  BEFOREEND: 'beforeend',
+  BEFOREBEGIN: 'beforebegin',
+  AFTEREND: 'afterend',
 };
 
-function createElement(template) {
-    const newElement = document.createElement('div');
-    newElement.innerHTML = template;
-    return newElement.firstElementChild;
-}
+export const createElement = (template) => {
+  const div = document.createElement('div');
+  div.innerHTML = template;
+  return div.firstElementChild;
+};
 
-function render(component, container, place = RenderPosition.BEFOREEND) {
-    container.insertAdjacentElement(place, component.getElement());
-}
+export const render = (component, container, place = RenderPosition.BEFOREEND) => {
+  if (!(component instanceof AbstractComponent)) {
+    throw new Error('Can render only components');
+  }
+  if (container === null) {
+    throw new Error('Container element doesn\'t exist');
+  }
+  container.insertAdjacentElement(place, component.element);
+};
 
-export {RenderPosition, createElement, render};
+export const remove = (component) => {
+  if (!(component instanceof AbstractComponent)) {
+    throw new Error('Can remove only components');
+  }
+  component.removeElement();
+};
