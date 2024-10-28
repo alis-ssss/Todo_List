@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Список задач</title>
+  </head>
+  <body class="board-app">
+    <header class="board-app__header">
+      <div class="board-app__inner">
+        <h1>Список задач</h1>
+      </div>
+    </header>
+    <main class="board-app__main">
+      <div class="board-app__inner">
+        <section class="add-task">
+          <form class="add-task__form" aria-label="Форма добавления задачи">
+            <label for="add-task">Новая задача</label>
+            <div class="add-task__input-wrapper">
+              <input
+                type="text"
+                name="task-name"
+                id="add-task"
+                placeholder="Название задачи..."
+                required=""
+              />
+              <button class="add-task__button button" type="submit">
+                <span>Добавить</span>
+              </button>
+            </div>
+          </form>
+        </section>
+        <section class="taskboard">
+          <div class="taskboard__list">
+            <div class="tasks-cont">
+              <span>Бэклог</span>
+              <ul class="task-list">
+                <li class="task">Выучить JS</li>
+                <li class="task">Выучить React</li>
+                <li class="task">Сделать домашку</li>
+              </ul>
+            </div>
+            <div class="tasks-cont progress">
+              <span>В процессе</span>
+              <ul class="task-list">
+                <li class="task">Выпить смузи</li>
+                <li class="task">Попить воды</li>
+              </ul>
+            </div>
+            <div class="tasks-cont completed">
+              <span>Готово</span>
+              <ul class="task-list">
+                <li class="task">Позвонить маме</li>
+                <li class="task">Погладить кота</li>
+              </ul>
+            </div>
+            <div class="tasks-cont garbage">
+              <span>Корзина</span>
+              <ul class="task-list">
+                <li class="task">Сходить погулять</li>
+                <li class="task">Прочитать войну и мир</li>
+              </ul>
+              <button class="clear_btn">х Очистить</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>
