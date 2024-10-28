@@ -10,7 +10,7 @@ function createTaskComponentTemplate(task) {
 
 export default class TaskComponent {
     constructor(task) {
-        this.task = task;
+        this.task = task.title;
         this.element = null;
     }
 
