@@ -8,12 +8,13 @@ const bodyContainer = document.querySelector('.board-app');
 const formContainer = document.querySelector('.add-task');
 const tasksBoardContainer = document.querySelector('.taskboard');
 
-const tasksModel = new TasksModel(); // Создаем экземпляр модели
+const tasksModel = new TasksModel(); 
+
 const tasksBoardPresenter = new TasksBoardPresenter({
     boardContainer: tasksBoardContainer,
-    tasksModel,
+    tasksModel: tasksModel.getTasks()
 });
 
-render(new HeaderComponent(), bodyContainer, RenderPosition.BEFOREBEGIN);
+render(new HeaderComponent(), bodyContainer, RenderPosition.AFTERBEGIN);
 render(new FormAddTaskComponent(), formContainer);
 tasksBoardPresenter.init();

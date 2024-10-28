@@ -45,7 +45,7 @@ html {
 }
 
 .add-task {
-  max-width: 330px;
+  max-width: 350px;
   background-color: #fff;
   padding: 20px;
   border-radius: 15px;
@@ -192,4 +192,12 @@ html {
 
 .clear_btn:hover {
   background-color: #990000;
+}
+
+.empty{
+  width: 100%;
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: 1px solid #b6b6b6;
+  color: #b6b6b6;
 }
