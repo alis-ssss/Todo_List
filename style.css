@@ -45,7 +45,7 @@ html {
 }
 
 .add-task {
-  max-width: 330px;
+  max-width: 350px;
   background-color: #fff;
   padding: 20px;
   border-radius: 15px;
@@ -150,30 +150,30 @@ html {
   background-color: #f0efef;
 }
 
-.progress span {
+.processing span {
   color: #1944ff;
   background-color: rgb(195, 209, 253);
 }
 
-.progress .task {
+.processing .task {
   border-left: 5px solid rgb(195, 209, 253);
 }
 
-.garbage span {
+.basket span {
   color: #740b0b;
   background-color: rgb(255, 211, 211);
 }
 
-.garbage .task {
+.basket .task {
   border-left: 5px solid rgb(253, 195, 195);
 }
 
-.completed span {
+.done span {
   color: #0f5c09;
   background-color: rgb(215, 255, 211);
 }
 
-.completed .task {
+.done .task {
   border-left: 5px solid rgb(215, 255, 211);
 }
 
