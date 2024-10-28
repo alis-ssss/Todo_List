@@ -45,7 +45,7 @@ html {
 }
 
 .add-task {
-  max-width: 330px;
+  max-width: 350px;
   background-color: #fff;
   padding: 20px;
   border-radius: 15px;
@@ -185,7 +185,7 @@ html {
   cursor: pointer;
   background-color: #bc4141;
   padding: 10px;
-  margin: 5px 0;
+  margin: 15px 0 0 0;
   width: 250px;
   transition: 0.4s;
 }

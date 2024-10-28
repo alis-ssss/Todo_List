@@ -5,16 +5,21 @@ import TasksModel from './model/tasks-model.js';
 import { render, RenderPosition } from './framework/render.js';
 
 const bodyContainer = document.querySelector('.board-app');
-const formContainer = document.querySelector('.add-task');
 const tasksBoardContainer = document.querySelector('.taskboard');
+const formContainer = document.querySelector('.add-task');
 
-const tasksModel = new TasksModel(); // Создаем экземпляр модели
-
+const tasksModel = new TasksModel();
 const tasksBoardPresenter = new TasksBoardPresenter({
     boardContainer: tasksBoardContainer,
-    tasksModel: tasksModel.getTasks()
+    tasksModel: tasksModel,
 });
 
-render(new HeaderComponent(), bodyContainer, RenderPosition.BEFOREBEGIN);
-render(new FormAddTaskComponent(), formContainer);
+const formAddTaskComponent = new FormAddTaskComponent({
+    onClick: (title) => {
+        tasksModel.addTask(title);
+    },
+});
+
+render(new HeaderComponent(), bodyContainer, RenderPosition.AFTERBEGIN);
+render(formAddTaskComponent, formContainer, RenderPosition.AFTERBEGIN); 
 tasksBoardPresenter.init();
