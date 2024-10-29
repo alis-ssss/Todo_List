@@ -14,7 +14,7 @@ export default class TasksBoardPresenter {
     constructor({ boardContainer, tasksModel }) {
         this.#boardContainer = boardContainer;
         this.#tasksModel = tasksModel;
-        this.#tasksModel.addObserver(this.#handleModelChange.bind(this)); // Подписка на изменения модели
+        this.#tasksModel.addObserver(this.#handleModelChange.bind(this)); 
     }
 
     init() {
@@ -51,8 +51,10 @@ export default class TasksBoardPresenter {
             const listComponent = new TasksListComponent({
                 status,
                 label: StatusLabel[status],
+                onTaskDrop: this.#handleTaskDrop.bind(this) 
             });
             render(listComponent, this.#tasksBoardComponent.getElement());
+
             const tasksForStatus = tasksByStatus[status] || [];
             if (tasksForStatus.length === 0) {
                 render(new EmptyTasksComponent(), listComponent.getTaskListElement());
@@ -61,11 +63,14 @@ export default class TasksBoardPresenter {
             }
         }
 
-        // Кнопка очистки корзины
         const resetButtonComponent = new ResetButtonComponent();
         render(resetButtonComponent, this.#tasksBoardComponent.getElement().querySelector('.basket'));
         resetButtonComponent.element.addEventListener('click', () => {
             this.#tasksModel.clearBasket();
         });
+    }
+
+    #handleTaskDrop(taskId, newStatus, position) {
+        this.#tasksModel.updateTaskStatus(taskId, newStatus, position);
     }
 }

@@ -14,7 +14,6 @@ const tasksBoardPresenter = new TasksBoardPresenter({
     tasksModel: tasksModel,
 });
 
-// Компонент для добавления задачи
 const formAddTaskComponent = new FormAddTaskComponent({
     onClick: (title) => {
         tasksModel.addTask(title);
@@ -22,5 +21,5 @@ const formAddTaskComponent = new FormAddTaskComponent({
 });
 
 render(new HeaderComponent(), bodyContainer, RenderPosition.AFTERBEGIN);
-render(formAddTaskComponent, formContainer, RenderPosition.AFTERBEGIN); // Добавляем форму в тело
+render(formAddTaskComponent, formContainer, RenderPosition.AFTERBEGIN); 
 tasksBoardPresenter.init();

@@ -1,5 +1,4 @@
 import { createElement } from "../framework/render.js";
-import { StatusLabel } from "../const.js";
 import { AbstractComponent } from "../framework/view/abstract-component.js";
 
 function createTaskListComponentTemplate(status, label) {
@@ -11,17 +10,56 @@ function createTaskListComponentTemplate(status, label) {
         </div>`;
 }
 
-export default class TaskListComponent extends AbstractComponent  {
-  constructor(obj) {
+export default class TasksListComponent extends AbstractComponent {
+  constructor({ status, label, onTaskDrop }) {
     super();
-    this.status = obj.status;
-    this.label = obj.label;
+    this.status = status;
+    this.label = label;
+    this.#setDropHandler(onTaskDrop);
   }
 
   get template() {
     return createTaskListComponentTemplate(this.status, this.label);
   }
 
+  #setDropHandler(onTaskDrop) {
+    const container = this.element.querySelector(".task-list");
+    container.addEventListener("dragover", (event) => {
+      event.preventDefault();
+     
+      const dropZone = event.target.closest(".task");
+      if (dropZone) {
+        dropZone.classList.add("highlight"); 
+      }
+    });
+
+    container.addEventListener("dragleave", (event) => {
+      const dropZone = event.target.closest(".task");
+      if (dropZone) {
+        dropZone.classList.remove("highlight");
+      }
+    });
+
+    container.addEventListener("drop", (event) => {
+      event.preventDefault();
+      const taskId = event.dataTransfer.getData("text/plain");
+
+
+      const dropZone = event.target.closest(".task");
+      let position;
+      if (dropZone) {
+        position = Array.from(container.children).indexOf(dropZone);
+      } else {
+        position = container.children.length; 
+      }
+
+      onTaskDrop(taskId, this.status, position); 
+      
+      if (dropZone) {
+        dropZone.classList.remove("highlight");
+      }
+    });
+  }
   getElement() {
     if (!this.element) {
       this.element = createElement(this.getTemplate());
