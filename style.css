@@ -12,6 +12,7 @@
 
 body,
 html {
+  position: relative;
   width: 100%;
   height: 100%;
   font-size: 14px;
@@ -45,7 +46,7 @@ html {
 }
 
 .add-task {
-  max-width: 330px;
+  max-width: 350px;
   background-color: #fff;
   padding: 20px;
   border-radius: 15px;
@@ -194,10 +195,25 @@ html {
   background-color: #990000;
 }
 
-.empty{
+.empty {
   width: 100%;
   padding: 10px 15px;
   border-radius: 5px;
   border: 1px solid #b6b6b6;
   color: #b6b6b6;
+}
+
+.highlight {
+  border: 1px dashed #01172e;
+}
+
+.board__no-tasks {
+  position: absolute;
+  font-size: 2rem;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  top: calc(50% - 20px);
 }

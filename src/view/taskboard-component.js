@@ -7,7 +7,7 @@ function createTaskboardComponentTemplate() {
   `;
 }
 
-export default class TaskboardComponent extends AbstractComponent  {
+export default class TaskboardComponent extends AbstractComponent {
   get template() {
     return createTaskboardComponentTemplate();
   }
